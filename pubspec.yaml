@@ -18,6 +18,9 @@ dependencies:
   flutter_animate: ^4.5.0
   equatable: ^2.0.5
   google_fonts: ^6.2.1
+  gap: ^3.0.1
+  awesome_extensions: ^2.0.18
+  jiffy: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +30,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
+
+  fonts:
+    - family: Helvetica
+      fonts:
+        - asset: fonts/Helvetica.ttf
+        - asset: fonts/Helvetica-Bold.ttf
+          weight: 700
