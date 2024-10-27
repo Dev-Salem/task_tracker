@@ -1,5 +1,6 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
 import 'package:task_tracker/tasks/domain/task.dart';
@@ -31,7 +32,8 @@ class TaskCardWidget extends StatelessWidget {
               softWrap: true,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-            ),
+            ).animate().fadeIn(
+                duration: 800.ms, delay: 300.ms, curve: Curves.easeInOutQuad),
           ),
           const Gap(12),
         ],
@@ -73,7 +75,12 @@ class CustomTimeWidget extends StatelessWidget {
           Text(
             end.minute.toString(),
           ),
-        ],
+        ].animate(interval: 100.ms).fadeIn(
+            // begin: 0,
+            // end: 1,
+            duration: 800.ms,
+            delay: 200.ms,
+            curve: Curves.easeInOutQuad),
       ),
     );
   }
