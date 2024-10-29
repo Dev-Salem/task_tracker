@@ -11,13 +11,13 @@ class Task extends Equatable {
   final TimeOfDay endTime;
   final List<Subtask> subtasks;
   const Task({
-    this.subtasks = const [],
     required this.task,
     required this.date,
     required this.isDone,
     required this.cardColor,
     required this.startTime,
     required this.endTime,
+    required this.subtasks,
   });
 
   @override
