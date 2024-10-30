@@ -13,5 +13,5 @@ class Subtask extends Equatable {
   });
 
   @override
-  List<Object> get props => [name, isDone];
+  List<Object> get props => [name, isDone, cardColor];
 }

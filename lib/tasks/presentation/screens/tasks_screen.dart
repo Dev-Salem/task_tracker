@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:task_tracker/tasks/core/app_colors.dart';
+import 'package:task_tracker/tasks/domain/subtask.dart';
 import 'package:task_tracker/tasks/domain/task.dart';
 import 'package:task_tracker/tasks/presentation/widgets/task_card_widget.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -15,7 +16,7 @@ class TasksScreen extends StatelessWidget {
     final currentDate = DateTime.now();
     final animationExecutionTime = 900.ms;
     final animationDelayTime = 200.ms;
-    const animationCurve = Curves.easeInOutQuad;
+    const animationCurve = Curves.fastOutSlowIn;
     return Scaffold(
         body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -106,13 +107,17 @@ class TasksScreen extends StatelessWidget {
               height: 8,
             ),
             itemBuilder: (context, index) {
-              return TaskCardWidget(task: tasks[index]);
+              return InkWell(
+                  onTap: () => Navigator.of(context)
+                      .pushNamed('task_details', arguments: tasks[index]),
+                  child: TaskCardWidget(task: tasks[index]));
             },
           ).animate().slideX(
               begin: 1.1,
               end: 0,
               duration: animationExecutionTime,
-              curve: Curves.easeInOutSine,
+              curve: animationCurve,
+              // curve: Curves.easeInOutSine,
               delay: animationDelayTime * 4.5),
         )
       ],
@@ -127,18 +132,84 @@ final tasks = [
       isDone: false,
       cardColor: Colors.yellowAccent,
       startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20)),
+      endTime: const TimeOfDay(hour: 7, minute: 20),
+      subtasks: [
+        Subtask(
+            name: "Set up a video conference 4",
+            isDone: false,
+            cardColor: Colors.amberAccent),
+        Subtask(
+            name: "Prepare the meeting room 3",
+            isDone: true,
+            cardColor: Colors.orangeAccent),
+        Subtask(
+            name: "Work on the backend 2",
+            isDone: false,
+            cardColor: Colors.teal),
+        Subtask(
+            name: "Work on the frontend 2",
+            isDone: false,
+            cardColor: Colors.indigo),
+        Subtask(
+            name: "Set up a video conference 1",
+            isDone: false,
+            cardColor: Colors.amberAccent),
+        Subtask(
+            name: "Prepare the meeting room 1",
+            isDone: true,
+            cardColor: Colors.orangeAccent),
+        Subtask(
+            name: "Work on the backend 1",
+            isDone: false,
+            cardColor: Colors.teal),
+        Subtask(
+            name: "Work on the frontend 1",
+            isDone: false,
+            cardColor: Colors.indigo),
+      ]),
   Task(
       task: "Daily Project",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.purpleAccent,
       startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40)),
+      endTime: const TimeOfDay(hour: 8, minute: 40),
+      subtasks: [
+        Subtask(
+            name: "Set up a video conference",
+            isDone: false,
+            cardColor: Colors.amberAccent),
+        Subtask(
+            name: "Prepare the meeting room",
+            isDone: true,
+            cardColor: Colors.orangeAccent),
+        Subtask(
+            name: "Work on the backend", isDone: false, cardColor: Colors.teal),
+        Subtask(
+            name: "Work on the frontend",
+            isDone: false,
+            cardColor: Colors.indigo),
+      ]),
   Task(
       task: "Weekly Planning",
       date: DateTime.now(),
       isDone: false,
+      subtasks: [
+        Subtask(
+            name: "Set up a video conference",
+            isDone: false,
+            cardColor: Colors.amberAccent),
+        Subtask(
+            name: "Prepare the meeting room",
+            isDone: true,
+            cardColor: Colors.orangeAccent),
+        Subtask(
+            name: "Work on the backend", isDone: false, cardColor: Colors.teal),
+        Subtask(
+            name: "Work on the frontend",
+            isDone: false,
+            cardColor: Colors.indigo),
+      ],
       cardColor: Colors.greenAccent,
       startTime: const TimeOfDay(hour: 2, minute: 50),
       endTime: const TimeOfDay(hour: 4, minute: 00)),
@@ -148,54 +219,62 @@ final tasks = [
       isDone: false,
       cardColor: Colors.yellowAccent,
       startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20)),
+      endTime: const TimeOfDay(hour: 7, minute: 20),
+      subtasks: const []),
   Task(
       task: "Daily Project",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.purpleAccent,
       startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40)),
+      endTime: const TimeOfDay(hour: 8, minute: 40),
+      subtasks: const []),
   Task(
       task: "Weekly Planning",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.greenAccent,
       startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00)),
+      endTime: const TimeOfDay(hour: 4, minute: 00),
+      subtasks: const []),
   Task(
       task: "Daily Project",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.purpleAccent,
       startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40)),
+      endTime: const TimeOfDay(hour: 8, minute: 40),
+      subtasks: const []),
   Task(
       task: "Weekly Planning",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.greenAccent,
       startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00)),
+      endTime: const TimeOfDay(hour: 4, minute: 00),
+      subtasks: const []),
   Task(
       task: "Design Meeting",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.yellowAccent,
       startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20)),
+      endTime: const TimeOfDay(hour: 7, minute: 20),
+      subtasks: const []),
   Task(
       task: "Daily Project",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.purpleAccent,
       startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40)),
+      endTime: const TimeOfDay(hour: 8, minute: 40),
+      subtasks: const []),
   Task(
       task: "Weekly Planning",
       date: DateTime.now(),
       isDone: false,
       cardColor: Colors.greenAccent,
       startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00)),
+      endTime: const TimeOfDay(hour: 4, minute: 00),
+      subtasks: const []),
 ];
