@@ -21,6 +21,7 @@ dependencies:
   gap: ^3.0.1
   awesome_extensions: ^2.0.18
   jiffy: ^6.3.1
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

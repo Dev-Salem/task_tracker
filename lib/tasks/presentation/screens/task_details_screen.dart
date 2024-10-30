@@ -22,6 +22,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
     with SingleTickerProviderStateMixin {
   bool selectedButton = true;
   late final AnimationController _controller;
+  
   double calculateDynamicHeight(
       int index, double availableHeight, int itemCount) {
     if (index == 0) return availableHeight;

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -89,13 +90,13 @@ class _SubtaskCardWidgetState extends State<SubtaskCardWidget>
               ],
             ),
             const Gap(12),
-            Text(
-              widget.subtask.name.toUpperCase() * 2,
+            AutoSizeText(
+              widget.subtask.name.toUpperCase(),
               style: context.displayMedium!.copyWith(color: Colors.black),
               softWrap: true,
-              maxLines: 3,
+              maxLines: 4,
               textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.fade,
             ),
             const Gap(12),
           ],
