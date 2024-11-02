@@ -22,6 +22,7 @@ dependencies:
   awesome_extensions: ^2.0.18
   jiffy: ^6.3.1
   auto_size_text: ^3.0.0
+  device_preview_plus: ^2.1.1
 
 dev_dependencies:
   flutter_test:
