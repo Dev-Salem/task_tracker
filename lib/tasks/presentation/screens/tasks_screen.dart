@@ -5,6 +5,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:task_tracker/tasks/core/app_colors.dart';
 import 'package:task_tracker/tasks/domain/subtask.dart';
 import 'package:task_tracker/tasks/domain/task.dart';
+import 'package:task_tracker/tasks/presentation/screens/create_task_widget.dart';
 import 'package:task_tracker/tasks/presentation/widgets/task_card_widget.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -31,6 +32,25 @@ class _TasksScreenState extends State<TasksScreen>
     super.dispose();
   }
 
+  int remainingDaysInMonth(DateTime date) {
+    DateTime lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+    return lastDayOfMonth.difference(date).inDays;
+  }
+
+  String getDayName(DateTime date) {
+    final dayNumber = date.day;
+    List<String> days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ];
+    return days[dayNumber - 1].toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentDate = DateTime.now();
@@ -38,123 +58,131 @@ class _TasksScreenState extends State<TasksScreen>
     final animationDelayTime = 500.ms;
     const animationCurve = Curves.fastOutSlowIn;
     return Scaffold(
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Gap(56),
-        Row(
-          children: [
-            CircleAvatar(
-                    backgroundColor: Colors.blue[900],
-                    radius: 28,
-                    child: Image.asset("assets/avatar.png"))
-                .animate()
-                .scaleXY(
-                    begin: 0,
-                    end: 1,
-                    duration: animationExecutionTime,
-                    curve: animationCurve),
-            const Gap(12),
-            Text(
-              "Hello,\nSalem 👋",
-              style: context.titleLarge!.copyWith(height: 1.0),
-            ).bold().animate().scaleXY(
-                begin: 0,
-                end: 1,
-                duration: animationExecutionTime,
-                delay: animationDelayTime * 1.5,
-                curve: animationCurve),
-            const Expanded(child: SizedBox()),
-            TextButton(
-              onPressed: () {},
-              child: Text("+", style: context.displaySmall).bold(),
-            )
-                .animate()
-                .rotate(
-                    begin: 0.5,
-                    end: 0,
-                    delay: animationDelayTime * 2,
-                    duration: animationExecutionTime,
-                    curve: animationCurve)
-                .scaleXY(begin: 0, end: 1),
-          ],
-        ).paddingSymmetric(horizontal: 16),
-        const Gap(32),
-        Text("${Jiffy.parseFromDateTime(currentDate).EEEE.toUpperCase()} ${currentDate.day}",
-                style: context.labelLarge)
-            .paddingSymmetric(horizontal: 16)
-            .animate()
-            .scaleXY(
-                begin: 0,
-                end: 1,
-                duration: animationExecutionTime,
-                delay: animationDelayTime * 3,
-                curve: animationCurve),
-        const Gap(8),
-        SizedBox(
-          height: 40,
-          child: ListView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
+        body: SafeArea(
+      bottom: false,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
             children: [
-              Text("Today".toUpperCase(), style: context.displaySmall),
-              const CircleAvatar(
-                backgroundColor: AppColors.secondaryBackgroundColor,
-                radius: 5,
-              ).paddingSymmetric(horizontal: 8),
-              ...List.generate(31 - currentDate.day, (index) {
-                return Text((index + currentDate.day + 1).toString(),
-                        style: context.displaySmall!
-                            .copyWith(color: Colors.white38))
-                    .paddingSymmetric(horizontal: 8);
-              }),
+              CircleAvatar(
+                      backgroundColor: Colors.blue[900],
+                      radius: 28,
+                      child: Image.asset("assets/avatar.png"))
+                  .animate()
+                  .scaleXY(
+                      begin: 0,
+                      end: 1,
+                      duration: animationExecutionTime,
+                      curve: animationCurve),
+              const Gap(12),
+              Text(
+                "Hello,\nSalem 👋",
+                style: context.titleLarge!.copyWith(height: 1.0),
+              ).bold().animate().scaleXY(
+                  begin: 0,
+                  end: 1,
+                  duration: animationExecutionTime,
+                  delay: animationDelayTime * 1.5,
+                  curve: animationCurve),
+              const Expanded(child: SizedBox()),
+              TextButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      showDragHandle: true,
+                      isScrollControlled: true,
+                      useSafeArea: true,
+                      builder: (context) => const CreateTaskBottomSheet()
+                          .paddingOnly(
+                              bottom:
+                                  MediaQuery.of(context).viewInsets.bottom));
+                },
+                child: Text("+", style: context.displaySmall).bold(),
+              )
+                  .animate()
+                  .rotate(
+                      begin: 0.5,
+                      end: 0,
+                      delay: animationDelayTime * 2,
+                      duration: animationExecutionTime,
+                      curve: animationCurve)
+                  .scaleXY(begin: 0, end: 1),
             ],
-          ),
-        ).paddingSymmetric(horizontal: 16).animate().slideX(
-            begin: 1,
-            end: 0,
-            duration: animationExecutionTime,
-            curve: animationCurve,
-            delay: animationDelayTime * 4),
-        // const Gap(0),
-        Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
-            itemCount: tasks.length,
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 8,
+          ).paddingSymmetric(horizontal: 16),
+          const Gap(32),
+          Text(getDayName((currentDate)), style: context.labelLarge)
+              .paddingSymmetric(horizontal: 16)
+              .animate()
+              .scaleXY(
+                  begin: 0,
+                  end: 1,
+                  duration: animationExecutionTime,
+                  delay: animationDelayTime * 3,
+                  curve: animationCurve),
+          const Gap(8),
+          SizedBox(
+            height: 40,
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              children: [
+                Text("TODAY", style: context.displaySmall),
+                const CircleAvatar(
+                  backgroundColor: AppColors.secondaryBackgroundColor,
+                  radius: 5,
+                ).paddingSymmetric(horizontal: 8),
+                ...List.generate(remainingDaysInMonth(currentDate), (index) {
+                  return Text((index + currentDate.day + 1).toString(),
+                          style: context.displaySmall!
+                              .copyWith(color: Colors.white38))
+                      .paddingSymmetric(horizontal: 8);
+                }),
+              ],
             ),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                  onTap: () {
-                    _controller.addStatusListener((status) {
-                      if (status.isCompleted) {
-                        Navigator.of(context)
-                            .pushNamed('task_details', arguments: tasks[index]);
-                      }
-                    });
-                    _controller.forward();
-                  },
-                  child: TaskCardWidget(task: tasks[index]));
-            },
-          ).animate().slideX(
-              begin: 1.1,
+          ).paddingSymmetric(horizontal: 16).animate().slideX(
+              begin: 1,
               end: 0,
               duration: animationExecutionTime,
               curve: animationCurve,
-              // curve: Curves.easeInOutSine,
-              delay: animationDelayTime * 4.5),
-        )
-      ],
-    )
-            .animate(autoPlay: false, controller: _controller)
-            .slideY(
-                begin: 0,
-                end: -1,
-                duration: 1000.ms,
-                curve: Curves.fastOutSlowIn)
-            .fadeOut());
+              delay: animationDelayTime * 4),
+          // const Gap(0),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
+              itemCount: tasks.length,
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 8,
+              ),
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                    onTap: () {
+                      _controller.addStatusListener((status) {
+                        if (status.isCompleted) {
+                          Navigator.of(context).pushNamed('task_details',
+                              arguments: tasks[index]);
+                        }
+                      });
+                      _controller.forward();
+                    },
+                    child: TaskCardWidget(task: tasks[index]));
+              },
+            ).animate().slideX(
+                begin: 1.1,
+                end: 0,
+                duration: animationExecutionTime,
+                curve: animationCurve,
+                // curve: Curves.easeInOutSine,
+                delay: animationDelayTime * 4.5),
+          )
+        ],
+      )
+          .animate(autoPlay: false, controller: _controller)
+          .slideY(
+              begin: 0, end: -1, duration: 1000.ms, curve: Curves.fastOutSlowIn)
+          .fadeOut(),
+    ));
   }
 }
 
@@ -259,60 +287,4 @@ final tasks = [
             isDone: false,
             cardColor: Colors.amberAccent),
       ]),
-  Task(
-      task: "Daily Project",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.purpleAccent,
-      startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40),
-      subtasks: const []),
-  Task(
-      task: "Weekly Planning",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.greenAccent,
-      startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00),
-      subtasks: const []),
-  Task(
-      task: "Daily Project",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.purpleAccent,
-      startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40),
-      subtasks: const []),
-  Task(
-      task: "Weekly Planning",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.greenAccent,
-      startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00),
-      subtasks: const []),
-  Task(
-      task: "Design Meeting",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.yellowAccent,
-      startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20),
-      subtasks: const []),
-  Task(
-      task: "Daily Project",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.purpleAccent,
-      startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40),
-      subtasks: const []),
-  Task(
-      task: "Weekly Planning",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.greenAccent,
-      startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00),
-      subtasks: const []),
 ];
