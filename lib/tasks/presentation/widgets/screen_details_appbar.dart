@@ -1,5 +1,6 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:task_tracker/tasks/domain/subtask.dart';
 
 class ScreenDetailsAppBar extends StatelessWidget {
@@ -17,14 +18,22 @@ class ScreenDetailsAppBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            color: Colors.black,
-            iconSize: 32,
-            icon: const Icon(
-              Icons.arrow_back,
-            )),
+                onPressed: () {
+                  context.pushReplacementNamed("tasks");
+                },
+                color: Colors.black,
+                iconSize: 32,
+                icon: const Icon(
+                  Icons.arrow_back,
+                ))
+            .animate()
+            .rotate(
+                begin: 0.5,
+                end: 0,
+                delay: 500.ms,
+                duration: 900.ms,
+                curve: Curves.fastOutSlowIn)
+            .scaleXY(begin: 0, end: 1),
         Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -34,7 +43,12 @@ class ScreenDetailsAppBar extends StatelessWidget {
           child: Text("$finishedSubtaskCount / $unfinishedSubtaskCount")
               .bold()
               .paddingSymmetric(horizontal: 24, vertical: 6),
-        ),
+        ).animate().scaleXY(
+            begin: 0,
+            end: 1,
+            duration: 900.ms,
+            delay: 900.ms,
+            curve: Curves.fastOutSlowIn),
       ],
     );
   }
