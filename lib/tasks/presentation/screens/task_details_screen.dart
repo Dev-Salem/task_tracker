@@ -1,3 +1,4 @@
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
@@ -59,64 +60,85 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
   Widget build(BuildContext context) {
     final subtasksCount = widget.task.subtasks.length;
     return AnimatedContainer(
-      duration: 400.ms,
+      duration: 600.ms,
       color: _backGroundColor,
       curve: Curves.decelerate,
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        floatingActionButton: TextButton.icon(
+          label: Text(
+            "Create new subtask".toUpperCase(),
+            style: context.titleMedium,
+          ).bold().paddingAll(16),
+          icon: const Icon(Icons.add),
+          iconAlignment: IconAlignment.end,
+          style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.black),
+              iconSize: WidgetStatePropertyAll(24)),
+          onPressed: () {},
+        ).animate(delay: 1500.ms).slideY(
+              begin: 3,
+              end: 0,
+              duration: 900.ms,
+              curve: Curves.fastOutSlowIn,
+            ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: DefaultTextStyle.merge(
             style: const TextStyle(color: Colors.black),
-            child: Column(
-              children: [
-                const Gap(48),
-                ScreenDetailsAppBar(subtasks: widget.task.subtasks),
-                const Gap(32),
-                Expanded(
-                  child: LayoutBuilder(builder: (context, cons) {
-                    return Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Column(
-                            children: [
-                              Text(
-                                "Tasks".toUpperCase(),
-                                style: const TextStyle(fontSize: 96, height: 1),
-                                textAlign: TextAlign.center,
-                              ),
-                              CustomToggleButton(
-                                  selectedButton: selectedButton,
-                                  onPressed: (index) {
-                                    setState(() {
-                                      selectedButton = !selectedButton;
-                                    });
-                                  }),
-                            ],
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  ScreenDetailsAppBar(subtasks: widget.task.subtasks),
+                  const Gap(32),
+                  Expanded(
+                    child: LayoutBuilder(builder: (context, cons) {
+                      return Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Tasks".toUpperCase(),
+                                  style:
+                                      const TextStyle(fontSize: 96, height: 1),
+                                  textAlign: TextAlign.center,
+                                ),
+                                CustomToggleButton(
+                                    selectedButton: selectedButton,
+                                    onPressed: (index) {
+                                      setState(() {
+                                        selectedButton = !selectedButton;
+                                      });
+                                    }),
+                              ],
+                            ),
                           ),
-                        ),
-                        ...List.generate(subtasksCount, (index) {
-                          return Positioned(
-                              top: 200 +
-                                  calculateDynamicTopOffset(
-                                      index, cons.maxHeight, subtasksCount),
-                              height: calculateDynamicHeight(
-                                  index, cons.maxHeight, subtasksCount),
-                              left: 0,
-                              right: 0,
-                              child: SubtaskCardWidget(
-                                  index: index,
-                                  subtask: widget.task.subtasks[index]));
-                        }),
-                      ].animate(interval: 200.ms, delay: 1000.ms).slideY(
-                            begin: 1,
-                            end: 0,
-                            duration: 900.ms,
-                            curve: Curves.fastOutSlowIn,
-                          ),
-                    );
-                  }),
-                )
-              ],
+                          ...List.generate(subtasksCount, (index) {
+                            return Positioned(
+                                top: 200 +
+                                    calculateDynamicTopOffset(
+                                        index, cons.maxHeight, subtasksCount),
+                                height: calculateDynamicHeight(
+                                    index, cons.maxHeight, subtasksCount),
+                                left: 0,
+                                right: 0,
+                                child: SubtaskCardWidget(
+                                    index: index,
+                                    subtask: widget.task.subtasks[index]));
+                          }),
+                        ].animate(interval: 200.ms, delay: 500.ms).slideY(
+                              begin: 1,
+                              end: 0,
+                              duration: 900.ms,
+                              curve: Curves.fastOutSlowIn,
+                            ),
+                      );
+                    }),
+                  )
+                ],
+              ),
             )),
       ),
     );
