@@ -8,14 +8,34 @@ import 'package:task_tracker/tasks/domain/task.dart';
 import 'package:task_tracker/tasks/presentation/widgets/task_card_widget.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final currentDate = DateTime.now();
     final animationExecutionTime = 900.ms;
-    final animationDelayTime = 200.ms;
+    final animationDelayTime = 500.ms;
     const animationCurve = Curves.fastOutSlowIn;
     return Scaffold(
         body: Column(
@@ -24,7 +44,6 @@ class TasksScreen extends StatelessWidget {
       children: [
         const Gap(56),
         Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CircleAvatar(
                     backgroundColor: Colors.blue[900],
@@ -84,7 +103,7 @@ class TasksScreen extends StatelessWidget {
                 backgroundColor: AppColors.secondaryBackgroundColor,
                 radius: 5,
               ).paddingSymmetric(horizontal: 8),
-              ...List.generate(30 - currentDate.day, (index) {
+              ...List.generate(31 - currentDate.day, (index) {
                 return Text((index + currentDate.day + 1).toString(),
                         style: context.displaySmall!
                             .copyWith(color: Colors.white38))
@@ -107,9 +126,16 @@ class TasksScreen extends StatelessWidget {
               height: 8,
             ),
             itemBuilder: (context, index) {
-              return InkWell(
-                  onTap: () => Navigator.of(context)
-                      .pushNamed('task_details', arguments: tasks[index]),
+              return GestureDetector(
+                  onTap: () {
+                    _controller.addStatusListener((status) {
+                      if (status.isCompleted) {
+                        Navigator.of(context)
+                            .pushNamed('task_details', arguments: tasks[index]);
+                      }
+                    });
+                    _controller.forward();
+                  },
                   child: TaskCardWidget(task: tasks[index]));
             },
           ).animate().slideX(
@@ -121,7 +147,14 @@ class TasksScreen extends StatelessWidget {
               delay: animationDelayTime * 4.5),
         )
       ],
-    ));
+    )
+            .animate(autoPlay: false, controller: _controller)
+            .slideY(
+                begin: 0,
+                end: -1,
+                duration: 1000.ms,
+                curve: Curves.fastOutSlowIn)
+            .fadeOut());
   }
 }
 
@@ -220,7 +253,12 @@ final tasks = [
       cardColor: Colors.yellowAccent,
       startTime: const TimeOfDay(hour: 12, minute: 10),
       endTime: const TimeOfDay(hour: 7, minute: 20),
-      subtasks: const []),
+      subtasks: [
+        Subtask(
+            name: "Set up a video conference",
+            isDone: false,
+            cardColor: Colors.amberAccent),
+      ]),
   Task(
       task: "Daily Project",
       date: DateTime.now(),
