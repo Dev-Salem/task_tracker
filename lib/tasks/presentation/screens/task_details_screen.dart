@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:task_tracker/tasks/core/app_colors.dart';
+import 'package:task_tracker/core/app_colors.dart';
 import 'package:task_tracker/tasks/data/task_repository.dart';
 import 'package:task_tracker/tasks/presentation/widgets/custom_floating_action_button.dart';
 import 'package:task_tracker/tasks/presentation/widgets/screen_details_appbar.dart';

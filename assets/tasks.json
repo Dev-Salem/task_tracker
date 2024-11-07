@@ -1,0 +1,133 @@
+[
+    {
+      "id": "1",
+      "task": "Design Meeting",
+      "date": "2024-11-01T12:34:56.000",
+      "isDone": false,
+      "cardColor": "yellowAccent",
+      "startTime": {
+        "hour": 12,
+        "minute": 10
+      },
+      "endTime": {
+        "hour": 7,
+        "minute": 20
+      },
+      "subtasks": [
+        {
+          "name": "Set up a video conference",
+          "isDone": false,
+          "cardColor": "amberAccent"
+        },
+        {
+          "name": "Prepare the meeting room",
+          "isDone": true,
+          "cardColor": "orangeAccent"
+        },
+        {
+          "name": "Work on the backend",
+          "isDone": false,
+          "cardColor": "teal"
+        },
+        {
+          "name": "Work on the frontend",
+          "isDone": false,
+          "cardColor": "indigo"
+        },
+        {
+          "name": "Praise @Dev_Salem0",
+          "isDone": false,
+          "cardColor": "redAccent"
+        },
+        {
+          "name": "Prepare the meeting room 1",
+          "isDone": true,
+          "cardColor": "cyanAccent"
+        },
+        {
+          "name": "Work on the backend 1",
+          "isDone": false,
+          "cardColor": "purpleAccent"
+        },
+        {
+          "name": "Work on the frontend 1",
+          "isDone": false,
+          "cardColor": "deepPurpleAccent"
+        }
+      ]
+    },
+    {
+      "id": "2024-11-01T12:34:56.000",
+      "task": "Daily Project",
+      "date": "2024-11-01T12:34:56.000",
+      "isDone": false,
+      "cardColor": "purpleAccent",
+      "startTime": {
+        "hour": 13,
+        "minute": 30
+      },
+      "endTime": {
+        "hour": 8,
+        "minute": 40
+      },
+      "subtasks": [
+        {
+          "name": "Set up a video conference",
+          "isDone": false,
+          "cardColor": "amberAccent"
+        },
+        {
+          "name": "Prepare the meeting room",
+          "isDone": true,
+          "cardColor": "orangeAccent"
+        },
+        {
+          "name": "Work on the backend",
+          "isDone": false,
+          "cardColor": "teal"
+        },
+        {
+          "name": "Work on the frontend",
+          "isDone": false,
+          "cardColor": "indigo"
+        }
+      ]
+    },
+    {
+      "id": "2024-11-01T12:34:56.000",
+      "task": "Weekly Planning",
+      "date": "2024-11-01T12:34:56.000",
+      "isDone": false,
+      "cardColor": "greenAccent",
+      "startTime": {
+        "hour": 2,
+        "minute": 50
+      },
+      "endTime": {
+        "hour": 4,
+        "minute": 0
+      },
+      "subtasks": [
+        {
+          "name": "Set up a video conference",
+          "isDone": false,
+          "cardColor": "amberAccent"
+        },
+        {
+          "name": "Prepare the meeting room",
+          "isDone": true,
+          "cardColor": "orangeAccent"
+        },
+        {
+          "name": "Work on the backend",
+          "isDone": false,
+          "cardColor": "teal"
+        },
+        {
+          "name": "Work on the frontend",
+          "isDone": false,
+          "cardColor": "indigo"
+        }
+      ]
+    }
+  ]

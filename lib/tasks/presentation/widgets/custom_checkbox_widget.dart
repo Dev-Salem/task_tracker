@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_tracker/tasks/core/app_colors.dart';
+import 'package:task_tracker/core/app_colors.dart';
 
 class CustomCheckBox extends StatelessWidget {
   final bool isChecked;

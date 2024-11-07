@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 
-import 'package:task_tracker/tasks/core/app_colors.dart';
+import 'package:task_tracker/core/app_colors.dart';
 
 class TasksScreenCalendar extends StatelessWidget {
   final Duration animationExecutionTime;

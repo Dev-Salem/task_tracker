@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:task_tracker/tasks/core/animations.dart';
-import 'package:task_tracker/tasks/core/app_colors.dart';
+import 'package:task_tracker/core/animations.dart';
+import 'package:task_tracker/core/app_colors.dart';
 import 'package:task_tracker/tasks/presentation/screens/task_details_screen.dart';
 import 'package:task_tracker/tasks/presentation/screens/tasks_screen.dart';
 
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
           inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8)))),
+
           brightness: Brightness.dark),
       themeMode: ThemeMode.dark,
       onGenerateRoute: (settings) {
