@@ -1,8 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:task_tracker/tasks/data/task_repository.dart';
 
+import 'package:task_tracker/tasks/data/task_repository.dart';
 import 'package:task_tracker/tasks/domain/subtask.dart';
 import 'package:task_tracker/tasks/presentation/controllers/tasks_controller.dart';
 import 'package:task_tracker/tasks/presentation/widgets/subtask_card_widget.dart';
@@ -10,10 +11,16 @@ import 'package:task_tracker/tasks/presentation/widgets/subtask_card_widget.dart
 class TaskDetailsBody extends StatelessWidget {
   final String taskId;
   final List<Subtask> subtasks;
+  final Duration cardsListsAnimation;
+  final Duration cardsListDelay;
+  final Curve animationCurve;
   const TaskDetailsBody({
     super.key,
     required this.taskId,
     required this.subtasks,
+    required this.cardsListsAnimation,
+    required this.cardsListDelay,
+    required this.animationCurve,
   });
 
   double calculateDynamicHeight(
@@ -71,11 +78,11 @@ class TaskDetailsBody extends StatelessWidget {
                     },
                   ));
             }),
-          ].animate(interval: 200.ms, delay: 500.ms).slideY(
+          ].animate(interval: 200.ms, delay: cardsListDelay).slideY(
                 begin: 1,
                 end: 0,
-                duration: 900.ms,
-                curve: Curves.fastOutSlowIn,
+                duration: cardsListsAnimation,
+                curve: animationCurve,
               ),
         );
       }),

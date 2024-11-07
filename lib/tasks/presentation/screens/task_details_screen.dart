@@ -44,17 +44,33 @@ class _TaskDetailsScreenState extends ConsumerState<TaskDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColorAnimationCurve = Curves.decelerate;
     final backgroundColorAnimation = 600.ms;
-    const animationCurve = Curves.decelerate;
+    final floatingActionButtonAnimation = 900.ms;
+    final floatingActionButtonDelay = 1000.ms;
+    const animationCurve = Curves.fastOutSlowIn;
+
+    final backButtonAnimation = 500.ms;
+    final backButtonDelay = 600.ms;
+    final subtasksCounterAnimation = 600.ms;
+    final subtasksCounterDelay = 400.ms;
+
+    final cardsListsAnimation = 900.ms;
+    final cardsListDelay = 500.ms;
     return AnimatedContainer(
         duration: backgroundColorAnimation,
         color: _backGroundColor,
-        curve: animationCurve,
+        curve: backgroundColorAnimationCurve,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
-          floatingActionButton:
-              CustomFloatingActionButton(ref: ref, taskId: widget.taskId),
+          floatingActionButton: CustomFloatingActionButton(
+            ref: ref,
+            taskId: widget.taskId,
+            animationDuration: floatingActionButtonAnimation,
+            animationDelay: floatingActionButtonDelay,
+            animationCurve: animationCurve,
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           body: DefaultTextStyle.merge(
@@ -66,11 +82,22 @@ class _TaskDetailsScreenState extends ConsumerState<TaskDetailsScreen>
                         data: (task) {
                           return Column(
                             children: [
-                              ScreenDetailsAppBar(subtasks: task.subtasks),
+                              ScreenDetailsAppBar(
+                                subtasks: task.subtasks,
+                                backButtonAnimation: backButtonAnimation,
+                                backButtonDelay: backButtonDelay,
+                                subtasksCounterAnimation:
+                                    subtasksCounterAnimation,
+                                subtasksCounterDelay: subtasksCounterDelay,
+                                animationCurve: animationCurve,
+                              ),
                               const Gap(32),
                               TaskDetailsBody(
                                 taskId: task.id,
                                 subtasks: task.subtasks,
+                                cardsListsAnimation: cardsListsAnimation,
+                                cardsListDelay: cardsListDelay,
+                                animationCurve: animationCurve,
                               ),
                             ],
                           );

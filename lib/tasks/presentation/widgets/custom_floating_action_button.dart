@@ -9,10 +9,16 @@ import 'package:task_tracker/tasks/presentation/controllers/tasks_controller.dar
 import 'package:task_tracker/tasks/presentation/widgets/create_task_widget.dart';
 
 class CustomFloatingActionButton extends StatelessWidget {
+  final Duration animationDuration;
+  final Duration animationDelay;
+  final Curve animationCurve;
   final WidgetRef ref;
   final String taskId;
   const CustomFloatingActionButton({
     super.key,
+    required this.animationDuration,
+    required this.animationDelay,
+    required this.animationCurve,
     required this.ref,
     required this.taskId,
   });
@@ -47,11 +53,12 @@ class CustomFloatingActionButton extends StatelessWidget {
                 ).paddingOnly(
                     bottom: MediaQuery.of(context).viewInsets.bottom));
       },
-    ).animate(delay: 1000.ms).slideY(
+    ).animate(delay: animationDelay).slideY(
+          //1000.ms, 900.ms,  Curves.fastOutSlowIn
           begin: 3,
           end: 0,
-          duration: 900.ms,
-          curve: Curves.fastOutSlowIn,
+          duration: animationDuration,
+          curve: animationCurve,
         );
   }
 }

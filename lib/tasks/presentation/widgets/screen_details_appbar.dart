@@ -1,13 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:task_tracker/tasks/domain/subtask.dart';
 
 class ScreenDetailsAppBar extends StatelessWidget {
   final List<Subtask> subtasks;
+  final Duration backButtonAnimation;
+  final Duration backButtonDelay;
+  final Duration subtasksCounterAnimation;
+  final Duration subtasksCounterDelay;
+  final Curve animationCurve;
   const ScreenDetailsAppBar({
     super.key,
     required this.subtasks,
+    required this.backButtonAnimation,
+    required this.backButtonDelay,
+    required this.subtasksCounterAnimation,
+    required this.subtasksCounterDelay,
+    required this.animationCurve,
   });
 
   @override
@@ -27,11 +39,12 @@ class ScreenDetailsAppBar extends StatelessWidget {
                 ))
             .animate()
             .rotate(
+                // 500.ms,
                 begin: 0.5,
                 end: 0,
-                delay: 500.ms,
-                duration: 900.ms,
-                curve: Curves.fastOutSlowIn)
+                delay: backButtonDelay,
+                duration: backButtonDelay,
+                curve: animationCurve)
             .scaleXY(begin: 0, end: 1),
         Container(
           alignment: Alignment.center,
@@ -43,11 +56,12 @@ class ScreenDetailsAppBar extends StatelessWidget {
               .bold()
               .paddingSymmetric(horizontal: 24, vertical: 6),
         ).animate().scaleXY(
+            // 600.ms,, 400.ms,
             begin: 0,
             end: 1,
-            duration: 600.ms,
-            delay: 400.ms,
-            curve: Curves.fastOutSlowIn),
+            duration: subtasksCounterAnimation,
+            delay: subtasksCounterDelay,
+            curve: animationCurve),
       ],
     );
   }
