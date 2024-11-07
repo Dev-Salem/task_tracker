@@ -1,16 +1,12 @@
-import 'package:device_preview_plus/device_preview_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_tracker/tasks/core/animations.dart';
-import 'package:task_tracker/tasks/domain/task.dart';
+import 'package:task_tracker/tasks/core/app_colors.dart';
 import 'package:task_tracker/tasks/presentation/screens/task_details_screen.dart';
 import 'package:task_tracker/tasks/presentation/screens/tasks_screen.dart';
 
 void main() {
-  runApp(DevicePreview(
-      enabled: false,
-      builder: (context) {
-        return const MyApp();
-      }));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,16 +15,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData(
-          scaffoldBackgroundColor: const Color.fromARGB(156, 27, 27, 27),
+          scaffoldBackgroundColor: AppColors.backgroundColor,
           fontFamily: "Helvetica",
           inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8)))),
-          textButtonTheme: const TextButtonThemeData(style: ButtonStyle()),
-          disabledColor: Colors.red,
           brightness: Brightness.dark),
       themeMode: ThemeMode.dark,
       onGenerateRoute: (settings) {
@@ -37,8 +30,14 @@ class MyApp extends StatelessWidget {
               builder: (context) => const TasksScreen(),
             ),
           'task_details' => NoAnimationTransition(
-              builder: (context) =>
-                  TaskDetailsScreen(task: settings.arguments as Task),
+              builder: (context) {
+                final arguments =
+                    settings.arguments as (String taskId, Color color);
+                return TaskDetailsScreen(
+                  taskId: arguments.$1,
+                  backgroundColor: arguments.$2,
+                );
+              },
             ),
           _ => NoAnimationTransition(builder: (context) => const TasksScreen())
         };
