@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
           inputDecorationTheme: const InputDecorationTheme(
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8)))),
-
           brightness: Brightness.dark),
       themeMode: ThemeMode.dark,
       onGenerateRoute: (settings) {
