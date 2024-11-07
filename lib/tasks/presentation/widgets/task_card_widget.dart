@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -17,20 +18,22 @@ class TaskCardWidget extends StatelessWidget {
     return Container(
       height: 190,
       width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 24),
       decoration: BoxDecoration(
           color: task.cardColor, borderRadius: BorderRadius.circular(40)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Gap(24),
-          CustomTimeWidget(start: task.startTime, end: task.endTime),
+          CustomClockWidget(start: task.startTime, end: task.endTime),
           const Gap(24),
           Expanded(
-            child: Text(
+            child: AutoSizeText(
               task.task.toUpperCase(),
               style: context.displayLarge!.copyWith(color: Colors.black),
-              softWrap: true,
-              maxLines: 2,
+              softWrap: false,
+              maxLines: 3,
+              textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
             ).animate().fadeIn(
                 duration: 800.ms, delay: 300.ms, curve: Curves.easeInOutQuad),
@@ -42,10 +45,10 @@ class TaskCardWidget extends StatelessWidget {
   }
 }
 
-class CustomTimeWidget extends StatelessWidget {
+class CustomClockWidget extends StatelessWidget {
   final TimeOfDay start;
   final TimeOfDay end;
-  const CustomTimeWidget({
+  const CustomClockWidget({
     super.key,
     required this.start,
     required this.end,

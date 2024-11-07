@@ -13,7 +13,6 @@ class ScreenDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final finishedSubtaskCount = subtasks.where((x) => x.isDone).length;
-    final unfinishedSubtaskCount = subtasks.where((x) => !x.isDone).length;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -40,14 +39,14 @@ class ScreenDetailsAppBar extends StatelessWidget {
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(30)),
-          child: Text("$finishedSubtaskCount / $unfinishedSubtaskCount")
+          child: Text("$finishedSubtaskCount / ${subtasks.length}")
               .bold()
               .paddingSymmetric(horizontal: 24, vertical: 6),
         ).animate().scaleXY(
             begin: 0,
             end: 1,
-            duration: 900.ms,
-            delay: 900.ms,
+            duration: 600.ms,
+            delay: 400.ms,
             curve: Curves.fastOutSlowIn),
       ],
     );

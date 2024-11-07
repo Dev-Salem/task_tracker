@@ -1,22 +1,20 @@
-import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:task_tracker/tasks/core/app_colors.dart';
-import 'package:task_tracker/tasks/domain/subtask.dart';
-import 'package:task_tracker/tasks/domain/task.dart';
-import 'package:task_tracker/tasks/presentation/screens/create_task_widget.dart';
-import 'package:task_tracker/tasks/presentation/widgets/task_card_widget.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
+import 'package:task_tracker/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:task_tracker/tasks/presentation/widgets/task_cards_list.dart';
+import 'package:task_tracker/tasks/presentation/widgets/tasks_screen_appbar.dart';
+import 'package:task_tracker/tasks/presentation/widgets/tasks_screen_calendar.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends ConsumerStatefulWidget {
   const TasksScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TasksScreenState();
 }
 
-class _TasksScreenState extends State<TasksScreen>
+class _TasksScreenState extends ConsumerState<TasksScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -32,150 +30,38 @@ class _TasksScreenState extends State<TasksScreen>
     super.dispose();
   }
 
-  int remainingDaysInMonth(DateTime date) {
-    DateTime lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
-    return lastDayOfMonth.difference(date).inDays;
-  }
-
-  String getDayName(DateTime date) {
-    final dayNumber = date.day;
-    List<String> days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ];
-    return days[dayNumber - 1].toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final currentDate = DateTime.now();
     final animationExecutionTime = 900.ms;
     final animationDelayTime = 500.ms;
     const animationCurve = Curves.fastOutSlowIn;
+    final notifier = ref.watch(tasksAsyncProvider);
     return Scaffold(
         body: SafeArea(
       bottom: false,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                      backgroundColor: Colors.blue[900],
-                      radius: 28,
-                      child: Image.asset("assets/avatar.png"))
-                  .animate()
-                  .scaleXY(
-                      begin: 0,
-                      end: 1,
-                      duration: animationExecutionTime,
-                      curve: animationCurve),
-              const Gap(12),
-              Text(
-                "Hello,\nSalem 👋",
-                style: context.titleLarge!.copyWith(height: 1.0),
-              ).bold().animate().scaleXY(
-                  begin: 0,
-                  end: 1,
-                  duration: animationExecutionTime,
-                  delay: animationDelayTime * 1.5,
-                  curve: animationCurve),
-              const Expanded(child: SizedBox()),
-              TextButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      showDragHandle: true,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (context) => const CreateTaskBottomSheet()
-                          .paddingOnly(
-                              bottom:
-                                  MediaQuery.of(context).viewInsets.bottom));
-                },
-                child: Text("+", style: context.displaySmall).bold(),
-              )
-                  .animate()
-                  .rotate(
-                      begin: 0.5,
-                      end: 0,
-                      delay: animationDelayTime * 2,
-                      duration: animationExecutionTime,
-                      curve: animationCurve)
-                  .scaleXY(begin: 0, end: 1),
-            ],
-          ).paddingSymmetric(horizontal: 16),
+          TasksScreenAppBar(
+              ref: ref,
+              animationExecutionTime: animationExecutionTime,
+              animationDelayTime: animationDelayTime,
+              animationCurve: animationCurve),
           const Gap(32),
-          Text(getDayName((currentDate)), style: context.labelLarge)
-              .paddingSymmetric(horizontal: 16)
-              .animate()
-              .scaleXY(
-                  begin: 0,
-                  end: 1,
-                  duration: animationExecutionTime,
-                  delay: animationDelayTime * 3,
-                  curve: animationCurve),
-          const Gap(8),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              children: [
-                Text("TODAY", style: context.displaySmall),
-                const CircleAvatar(
-                  backgroundColor: AppColors.secondaryBackgroundColor,
-                  radius: 5,
-                ).paddingSymmetric(horizontal: 8),
-                ...List.generate(remainingDaysInMonth(currentDate), (index) {
-                  return Text((index + currentDate.day + 1).toString(),
-                          style: context.displaySmall!
-                              .copyWith(color: Colors.white38))
-                      .paddingSymmetric(horizontal: 8);
-                }),
-              ],
-            ),
-          ).paddingSymmetric(horizontal: 16).animate().slideX(
-              begin: 1,
-              end: 0,
-              duration: animationExecutionTime,
-              curve: animationCurve,
-              delay: animationDelayTime * 4),
-          // const Gap(0),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 4),
-              itemCount: tasks.length,
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 8,
-              ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                    onTap: () {
-                      _controller.addStatusListener((status) {
-                        if (status.isCompleted) {
-                          Navigator.of(context).pushNamed('task_details',
-                              arguments: tasks[index]);
-                        }
-                      });
-                      _controller.forward();
-                    },
-                    child: TaskCardWidget(task: tasks[index]));
+          TasksScreenCalendar(
+              animationExecutionTime: animationExecutionTime,
+              animationDelayTime: animationDelayTime,
+              animationCurve: animationCurve),
+          notifier.when(
+              data: (tasks) {
+                return TaskCardsList(
+                    tasks: tasks,
+                    controller: _controller,
+                    animationExecutionTime: animationExecutionTime,
+                    animationDelayTime: animationDelayTime,
+                    animationCurve: animationCurve);
               },
-            ).animate().slideX(
-                begin: 1.1,
-                end: 0,
-                duration: animationExecutionTime,
-                curve: animationCurve,
-                // curve: Curves.easeInOutSine,
-                delay: animationDelayTime * 4.5),
-          )
+              error: (e, s) => Text("Something went wrong $e"),
+              loading: () => const CircularProgressIndicator.adaptive())
         ],
       )
           .animate(autoPlay: false, controller: _controller)
@@ -185,106 +71,3 @@ class _TasksScreenState extends State<TasksScreen>
     ));
   }
 }
-
-final tasks = [
-  Task(
-      task: "Design Meeting",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.yellowAccent,
-      startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20),
-      subtasks: [
-        Subtask(
-            name: "Set up a video conference 4",
-            isDone: false,
-            cardColor: Colors.amberAccent),
-        Subtask(
-            name: "Prepare the meeting room 3",
-            isDone: true,
-            cardColor: Colors.orangeAccent),
-        Subtask(
-            name: "Work on the backend 2",
-            isDone: false,
-            cardColor: Colors.teal),
-        Subtask(
-            name: "Work on the frontend 2",
-            isDone: false,
-            cardColor: Colors.indigo),
-        Subtask(
-            name: "Set up a video conference 1",
-            isDone: false,
-            cardColor: Colors.amberAccent),
-        Subtask(
-            name: "Prepare the meeting room 1",
-            isDone: true,
-            cardColor: Colors.orangeAccent),
-        Subtask(
-            name: "Work on the backend 1",
-            isDone: false,
-            cardColor: Colors.teal),
-        Subtask(
-            name: "Work on the frontend 1",
-            isDone: false,
-            cardColor: Colors.indigo),
-      ]),
-  Task(
-      task: "Daily Project",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.purpleAccent,
-      startTime: const TimeOfDay(hour: 13, minute: 30),
-      endTime: const TimeOfDay(hour: 8, minute: 40),
-      subtasks: [
-        Subtask(
-            name: "Set up a video conference",
-            isDone: false,
-            cardColor: Colors.amberAccent),
-        Subtask(
-            name: "Prepare the meeting room",
-            isDone: true,
-            cardColor: Colors.orangeAccent),
-        Subtask(
-            name: "Work on the backend", isDone: false, cardColor: Colors.teal),
-        Subtask(
-            name: "Work on the frontend",
-            isDone: false,
-            cardColor: Colors.indigo),
-      ]),
-  Task(
-      task: "Weekly Planning",
-      date: DateTime.now(),
-      isDone: false,
-      subtasks: [
-        Subtask(
-            name: "Set up a video conference",
-            isDone: false,
-            cardColor: Colors.amberAccent),
-        Subtask(
-            name: "Prepare the meeting room",
-            isDone: true,
-            cardColor: Colors.orangeAccent),
-        Subtask(
-            name: "Work on the backend", isDone: false, cardColor: Colors.teal),
-        Subtask(
-            name: "Work on the frontend",
-            isDone: false,
-            cardColor: Colors.indigo),
-      ],
-      cardColor: Colors.greenAccent,
-      startTime: const TimeOfDay(hour: 2, minute: 50),
-      endTime: const TimeOfDay(hour: 4, minute: 00)),
-  Task(
-      task: "Design Meeting",
-      date: DateTime.now(),
-      isDone: false,
-      cardColor: Colors.yellowAccent,
-      startTime: const TimeOfDay(hour: 12, minute: 10),
-      endTime: const TimeOfDay(hour: 7, minute: 20),
-      subtasks: [
-        Subtask(
-            name: "Set up a video conference",
-            isDone: false,
-            cardColor: Colors.amberAccent),
-      ]),
-];

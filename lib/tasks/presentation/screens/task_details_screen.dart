@@ -1,50 +1,36 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:task_tracker/tasks/core/app_colors.dart';
-import 'package:task_tracker/tasks/domain/task.dart';
-import 'package:task_tracker/tasks/presentation/widgets/custom_toggle_button.dart';
+import 'package:task_tracker/tasks/data/task_repository.dart';
+import 'package:task_tracker/tasks/presentation/widgets/custom_floating_action_button.dart';
 import 'package:task_tracker/tasks/presentation/widgets/screen_details_appbar.dart';
-import 'package:task_tracker/tasks/presentation/widgets/subtask_card_widget.dart';
+import 'package:task_tracker/tasks/presentation/widgets/task_details_body.dart';
 
-class TaskDetailsScreen extends StatefulWidget {
-  final Task task;
-
-  const TaskDetailsScreen({
-    super.key,
-    required this.task,
-  });
+class TaskDetailsScreen extends ConsumerStatefulWidget {
+  final String taskId;
+  final Color backgroundColor;
+  const TaskDetailsScreen(
+      {super.key, required this.taskId, required this.backgroundColor});
 
   @override
-  State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _TaskDetailsScreenState();
 }
 
-class _TaskDetailsScreenState extends State<TaskDetailsScreen>
+class _TaskDetailsScreenState extends ConsumerState<TaskDetailsScreen>
     with SingleTickerProviderStateMixin {
-  bool selectedButton = true;
   Color _backGroundColor = AppColors.backgroundColor;
   late final AnimationController _controller;
-
-  double calculateDynamicHeight(
-      int index, double availableHeight, int itemCount) {
-    if (index == 0) return availableHeight;
-    double offset = availableHeight / (itemCount * 1.5);
-    return (availableHeight - (offset * index));
-  }
-
-  double calculateDynamicTopOffset(
-      int index, double availableHeight, int itemCount) {
-    if (index == 0) return 0;
-    return availableHeight / (itemCount * 1.5) * index;
-  }
 
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
     Future.delayed(0.ms, () {
       setState(() {
-        _backGroundColor = widget.task.cardColor;
+        _backGroundColor = widget.backgroundColor;
       });
     });
     super.initState();
@@ -58,89 +44,41 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final subtasksCount = widget.task.subtasks.length;
+    final backgroundColorAnimation = 600.ms;
+    const animationCurve = Curves.decelerate;
     return AnimatedContainer(
-      duration: 600.ms,
-      color: _backGroundColor,
-      curve: Curves.decelerate,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        floatingActionButton: TextButton.icon(
-          label: Text(
-            "Create new subtask".toUpperCase(),
-            style: context.titleMedium,
-          ).bold().paddingAll(16),
-          icon: const Icon(Icons.add),
-          iconAlignment: IconAlignment.end,
-          style: const ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Colors.black),
-              iconSize: WidgetStatePropertyAll(24)),
-          onPressed: () {},
-        ).animate(delay: 1500.ms).slideY(
-              begin: 3,
-              end: 0,
-              duration: 900.ms,
-              curve: Curves.fastOutSlowIn,
-            ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: DefaultTextStyle.merge(
-            style: const TextStyle(color: Colors.black),
-            child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  ScreenDetailsAppBar(subtasks: widget.task.subtasks),
-                  const Gap(32),
-                  Expanded(
-                    child: LayoutBuilder(builder: (context, cons) {
-                      return Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Tasks".toUpperCase(),
-                                  style:
-                                      const TextStyle(fontSize: 96, height: 1),
-                                  textAlign: TextAlign.center,
-                                ),
-                                CustomToggleButton(
-                                    selectedButton: selectedButton,
-                                    onPressed: (index) {
-                                      setState(() {
-                                        selectedButton = !selectedButton;
-                                      });
-                                    }),
-                              ],
-                            ),
-                          ),
-                          ...List.generate(subtasksCount, (index) {
-                            return Positioned(
-                                top: 200 +
-                                    calculateDynamicTopOffset(
-                                        index, cons.maxHeight, subtasksCount),
-                                height: calculateDynamicHeight(
-                                    index, cons.maxHeight, subtasksCount),
-                                left: 0,
-                                right: 0,
-                                child: SubtaskCardWidget(
-                                    index: index,
-                                    subtask: widget.task.subtasks[index]));
-                          }),
-                        ].animate(interval: 200.ms, delay: 500.ms).slideY(
-                              begin: 1,
-                              end: 0,
-                              duration: 900.ms,
-                              curve: Curves.fastOutSlowIn,
-                            ),
-                      );
-                    }),
-                  )
-                ],
-              ),
-            )),
-      ),
-    );
+        duration: backgroundColorAnimation,
+        color: _backGroundColor,
+        curve: animationCurve,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          floatingActionButton:
+              CustomFloatingActionButton(ref: ref, taskId: widget.taskId),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          body: DefaultTextStyle.merge(
+              style: const TextStyle(color: Colors.black),
+              child: SafeArea(
+                  bottom: false,
+                  child: ref.watch(taskProvider.call(widget.taskId)).when(
+                        loading: () => const SizedBox.shrink(),
+                        data: (task) {
+                          return Column(
+                            children: [
+                              ScreenDetailsAppBar(subtasks: task.subtasks),
+                              const Gap(32),
+                              TaskDetailsBody(
+                                taskId: task.id,
+                                subtasks: task.subtasks,
+                              ),
+                            ],
+                          );
+                        },
+                        error: (e, _) => Scaffold(
+                          body: Text("Something Went Wrong $e").toCenter(),
+                        ),
+                      ))),
+        ));
   }
 }

@@ -1,13 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class CreateTaskBottomSheet extends StatefulWidget {
   final bool isTask;
+  final void Function(Color selectedColor, String text)? onSaveSubtask;
+  final void Function(
+          Color selectedColor, String text, TimeOfDay from, TimeOfDay to)?
+      onSaveTask;
   const CreateTaskBottomSheet({
     super.key,
-    this.isTask = true,
+    this.onSaveTask,
+    this.onSaveSubtask,
+    required this.isTask,
   });
 
   @override
@@ -16,7 +21,7 @@ class CreateTaskBottomSheet extends StatefulWidget {
 
 class _CreateTaskBottomSheetState extends State<CreateTaskBottomSheet> {
   late final TextEditingController _controller;
-  Color selectedColor = Colors.greenAccent;
+  Color selectedColor = Colors.deepPurpleAccent;
   TimeOfDay fromTime = TimeOfDay.now();
   TimeOfDay toTime = TimeOfDay.now();
   @override
@@ -43,7 +48,8 @@ class _CreateTaskBottomSheetState extends State<CreateTaskBottomSheet> {
             Flexible(
               flex: 5,
               child: TextFormField(
-                maxLength: 25,
+                maxLength: 24,
+                controller: _controller,
                 decoration: const InputDecoration(
                   labelText: "Task",
                 ),
@@ -110,8 +116,16 @@ class _CreateTaskBottomSheetState extends State<CreateTaskBottomSheet> {
         const Gap(12),
         SizedBox(
             width: double.infinity,
-            child:
-                FilledButton.icon(onPressed: () {}, label: const Text("Add"))),
+            child: FilledButton.icon(
+                onPressed: () {
+                  widget.isTask
+                      ? widget.onSaveTask!(
+                          selectedColor, _controller.text, fromTime, toTime)
+                      : widget.onSaveSubtask!(selectedColor, _controller.text);
+
+                  // context.pop();
+                },
+                label: const Text("Add"))),
         const Gap(32),
       ],
     ).paddingSymmetric(horizontal: 24);

@@ -1,15 +1,14 @@
-
 import 'package:flutter/material.dart';
+import 'package:task_tracker/tasks/core/app_colors.dart';
 
-class CustomCheckBox extends StatefulWidget {
-  const CustomCheckBox({super.key});
-
-  @override
-  State<CustomCheckBox> createState() => _CustomCheckBoxState();
-}
-
-class _CustomCheckBoxState extends State<CustomCheckBox> {
-  bool isDone = false;
+class CustomCheckBox extends StatelessWidget {
+  final bool isChecked;
+  final Function(bool?) onCheck;
+  const CustomCheckBox({
+    super.key,
+    required this.isChecked,
+    required this.onCheck,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
       scale: 1.5,
       child: Checkbox(
           fillColor: const WidgetStatePropertyAll(Colors.transparent),
-          checkColor: Colors.lightGreen,
+          checkColor: AppColors.checkBoxColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
           ),
@@ -25,12 +24,10 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
             (states) => BorderSide(
                 strokeAlign: 1,
                 width: 1.5,
-                color: isDone ? Colors.lightGreen : Colors.black),
+                color: isChecked ? AppColors.checkBoxColor : Colors.black),
           ),
-          value: isDone,
-          onChanged: (z) => setState(() {
-                isDone = !isDone;
-              })),
+          value: isChecked,
+          onChanged: onCheck),
     );
   }
 }
