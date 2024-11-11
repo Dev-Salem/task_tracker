@@ -21,7 +21,7 @@ class TasksScreenCalendar extends StatelessWidget {
   }
 
   String getDayName(DateTime date) {
-    final dayNumber = date.day;
+    final dayNumber = date.weekday;
     List<String> days = [
       "Sunday",
       "Monday",
