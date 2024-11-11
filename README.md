@@ -12,10 +12,7 @@ A simple task tracker app with custom UI, complex and fun animations
 ## Screenshot 📸
 
 
-
-
- 
-
+https://github.com/user-attachments/assets/7fdce9c1-28b8-4c49-ac48-0ef2894cd0af
 
 ## 💭 Inspiration
 
